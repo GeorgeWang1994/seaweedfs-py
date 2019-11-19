@@ -11,7 +11,7 @@
 
 from seaweedfs.client import *
 
-filer = Filer()
+filer = Filer(host="0.0.0.0")
 
 
 class TestFiler(object):
@@ -23,9 +23,9 @@ class TestFiler(object):
         assert result
 
     def test_upload(self):
-        with open(self.file_name, "w") as fp:
-            fp.write("True")
-        with open(self.file_name, "r") as fp:
+        with open(self.file_name, "wb") as fp:
+            fp.write(b"True")
+        with open(self.file_name, "rb") as fp:
             result = filer.upload(fp, self.file_name, self.file_package)
             assert result
 
@@ -34,9 +34,9 @@ class TestFiler(object):
         assert result
 
     def test_download(self):
-        with open(self.file_name, "w") as fp:
-            fp.write("True")
-        with open(self.file_name, "r") as fp:
+        with open(self.file_name, "wb") as fp:
+            fp.write(b"True")
+        with open(self.file_name, "rb") as fp:
             result = filer.upload(fp, self.file_name, self.file_package)
             assert result
 
@@ -47,9 +47,9 @@ class TestFiler(object):
         assert result["content"] == "True"
 
     def test_delete(self):
-        with open(self.file_name, "w") as fp:
-            fp.write("True")
-        with open(self.file_name, "r") as fp:
+        with open(self.file_name, "wb") as fp:
+            fp.write(b"True")
+        with open(self.file_name, "rb") as fp:
             result = filer.upload(fp, self.file_name, self.file_package)
             assert result
 
@@ -76,3 +76,19 @@ class TestFiler(object):
         result = filer.list(self.file_package)
         assert result
         assert result["Path"] == "/%s" % self.file_package
+
+    def test_delete_folder(self):
+        with open(self.file_name, "wb") as fp:
+            fp.write(b"True")
+        with open(self.file_name, "rb") as fp:
+            result = filer.upload(fp, self.file_name, self.file_package)
+            assert result
+
+        os.remove(self.file_name)
+
+        result = filer.exist(self.file_name, self.file_package)
+        assert result
+        result = filer.delete_folder(self.file_package)
+        assert result
+        result = filer.exist(self.file_name, self.file_package)
+        assert not result

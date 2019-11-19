@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding:utf-8 -*-
+# ** -- coding: utf-8 -- **
 
 """
 @author:    george wang
@@ -18,7 +18,7 @@ class JSONDecodeError(SeaweedfsError):
     pass
 
 
-class PostError(SeaweedfsError):
+class UploadError(SeaweedfsError):
     pass
 
 
